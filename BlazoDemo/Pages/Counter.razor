@@ -14,26 +14,21 @@
 
     private void IncrementCount()
     {
-        // Simulamos la creación de un recurso IDisposable que no se libera
-        var memoryStream = new MemoryStream();
-        var content = new MultipartFormDataContent
-        {
-            { new StringContent("test content"), "test" }
-        };
+using var memoryStream = new MemoryStream();
+using var content = new MultipartFormDataContent
+    {
+        { new StringContent("test content"), "test" }
+    };
 
-        // Intentamos enviar una petición HTTP (no se realiza ninguna operación real aquí)
-        try
-        {
-            var response = await Http.PostAsync("https://example.com/api/upload", content);
-            response.EnsureSuccessStatusCode();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-
-        // Error: memoryStream y content no se han liberado correctamente
-
-        
+try
+{
+    var httpClient = new HttpClient();
+    var response = await httpClient.PostAsync("https://example.com/api/upload", content);
+    response.EnsureSuccessStatusCode();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
     }
 }
